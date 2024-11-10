@@ -3,8 +3,8 @@ import requests
 
 #Grabs PGN (game notation) from lichess API
 #api_url = 'https://lichess.org/game/export/[game ID]?action=pgnInJson'
-#Add ?action=[action]... to specify request
-api_url = 'https://lichess.org/game/export/28BX1zzd?action=pgnInJson'
+#Add ?action=[action]... to specify request, & to include multiple requests
+api_url = 'https://lichess.org/game/export/28BX1zzd?action=pgnInJson&tags=false&clocks=false&evals=false'
 response = requests.get(api_url)
 
 # If the responses status code is 200 (success)
