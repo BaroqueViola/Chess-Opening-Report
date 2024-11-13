@@ -20,7 +20,7 @@ def lichess():
     move_list = data['moves'].split()
     print(move_list)
 
-def chessdb(FEN):
+def qall(FEN):
     api_url = 'http://www.chessdb.cn/cdb.php?action=queryall&board=' + FEN + '&json=true'
     response = requests.get(api_url)
     
@@ -36,8 +36,8 @@ def chessdb(FEN):
             moves = data['moves']
             print('Suggested Moves and Evaluations:')
             for move in moves:
-                print(f"Move: {move.get('san')}, Centipawn evaluation: {move.get('score')}, \
-Expected score: {round(float(move.get('winrate'))*0.01,4)}")
+                print(f"Move: {move.get('san')}, {move.get('score')}, \
+{round(float(move.get('winrate'))*0.01,4)}")
                 
 lichess()
-chessdb('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
+qall('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
