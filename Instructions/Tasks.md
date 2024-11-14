@@ -8,8 +8,9 @@ Example:
 lichess()
 # User inputs qzsgQdLe
 # Returns
-{'opening': 'Ruy Lopez: Closed, Breyer Defense, Zaitsev Hybrid',
-'moves': ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5', 'a6', 'Ba4', 'Nf6', 'O-O']}
+{
+    'opening': 'Ruy Lopez: Closed, Breyer Defense, Zaitsev Hybrid',
+    'moves': ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5', 'a6', 'Ba4', 'Nf6', 'O-O']}
 ```
 ## Task 2: get_positions(game)
 Define a function get_positions(game) that returns a list containing the position code a.k.a. FEN of each position, including the starting position.
