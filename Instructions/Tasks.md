@@ -1,5 +1,5 @@
 ## Task 1: lichess() (to fix)
-Define a function lichess() where the user inputs the 8 character game code e.g. qzsgQdLe, return a dictionary containing the following: {'opening': 'name', 'moves': [list of moves]}
+Define a function lichess() where the user inputs the 8 character game code e.g. qzsgQdLe, return a dictionary containing the following: {'opening': 'name', 'moves': [list\ of\ moves]}
 
 Later we will modify the code so that it accepts game links also.
 
