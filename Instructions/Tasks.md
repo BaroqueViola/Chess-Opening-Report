@@ -31,7 +31,7 @@ Where `expected_score = round(float(move.get('winrate'))*0.01,4)`
 
 Example:
 ```python
-FEN = r1bqkb1r/1ppp1ppp/p1n5/4p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 b kq - 0 6
+FEN = 'r1bqkb1r/1ppp1ppp/p1n5/4p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 b kq - 0 6'
 qall(FEN)
 # Returns
 {'b5': [-1, 0.4992], 'Be7': [-5, 0.4962], 'Bb4': [-102, 0.4233]}
