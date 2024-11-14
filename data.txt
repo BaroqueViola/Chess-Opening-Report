@@ -1,0 +1,11 @@
+Sample games:
+qzsgQdLe
+ZquRjKFW
+https://lichess.org/28BX1zzd
+https://lichess.org/AXV9lmtM
+https://lichess.org/XhFQ9qRp
+
+Sample positions:
+rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+r1bqkb1r/1ppp1ppp/p1n5/4p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 b kq - 0 6
+rnbqkb1r/ppp2ppp/4pn2/8/2pPP3/2N2N2/PP3PPP/R1BQKB1R b KQkq - 0 5
