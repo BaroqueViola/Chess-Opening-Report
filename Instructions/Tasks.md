@@ -9,8 +9,8 @@ lichess()
 # User inputs qzsgQdLe
 # Returns
 {
-'opening': 'Ruy Lopez: Closed, Breyer Defense, Zaitsev Hybrid',
-'moves': ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5', 'a6', 'Ba4', 'Nf6', 'O-O']
+  'opening': 'Ruy Lopez: Closed, Breyer Defense, Zaitsev Hybrid',
+  'moves': ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5', 'a6', 'Ba4', 'Nf6', 'O-O']
 }
 ```
 ## Task 2: get_positions(game)
@@ -36,7 +36,11 @@ Example:
 FEN = 'r1bqkb1r/1ppp1ppp/p1n5/4p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 b kq - 0 6'
 qall(FEN)
 # Returns
-{'b5': [-1, 0.4992], 'Be7': [-5, 0.4962], 'Bb4': [-102, 0.4233]}
+{
+  'b5': [-1, 0.4992],
+  'Be7': [-5, 0.4962],
+  'Bb4': [-102, 0.4233]
+}
 ```
 
 ## Task 4: qscore(FEN)
