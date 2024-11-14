@@ -27,7 +27,7 @@ get_positions(game)
 ```
 ## Task 3: qall(FEN)
 Define a function qall(FEN) that returns a dictionaries which contains the move: evaluation (centipawn), and evaluation (expected score)
-Where expected_score = round(float(move.get('winrate'))*0.01,4)
+Where `expected_score = round(float(move.get('winrate'))*0.01,4)`
 
 Example:
 ```python
