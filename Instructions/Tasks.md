@@ -1,6 +1,5 @@
 ## Task 1: lichess()
-Define a function lichess() where the user inputs the 8 character game code e.g. qzsgQdLe, return a dictionary containing the following: {'opening': 'name',
-'moves': [list of moves]}
+Define a function lichess() where the user inputs the 8 character game code e.g. qzsgQdLe, return a dictionary containing the following: {'opening': 'name', 'moves': [list of moves]}
 
 Example:
 ```python
@@ -10,7 +9,8 @@ lichess()
 {'opening': 'Ruy Lopez: Closed, Breyer Defense, Zaitsev Hybrid',
 'moves': ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5', 'a6', 'Ba4', 'Nf6', 'O-O']}
 ```
-## Task 2: Define a function get_positions(game) that returns a list containing the position code a.k.a. FEN of each position, including the starting position.
+## Task 2: get_positions(game)
+Define a function get_positions(game) that returns a list containing the position code a.k.a. FEN of each position, including the starting position.
 
 Example:
 ```python
