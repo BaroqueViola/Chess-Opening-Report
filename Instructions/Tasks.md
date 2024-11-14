@@ -10,7 +10,7 @@ lichess()
 # Returns
 {
   'opening': 'Ruy Lopez: Closed, Breyer Defense, Zaitsev Hybrid',
-  'moves': ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5', 'a6', 'Ba4', 'Nf6', 'O-O']
+  'moves': ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5', 'a6', 'Ba4', 'Nf6', 'O-O', ...]
 }
 ```
 ## Task 2: get_positions(game)
@@ -39,7 +39,8 @@ qall(FEN)
 {
   'b5': [-1, 0.4992],
   'Be7': [-5, 0.4962],
-  'Bb4': [-102, 0.4233]
+  'Bb4': [-102, 0.4233],
+  ...
 }
 ```
 
