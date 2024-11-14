@@ -23,8 +23,8 @@ get_positions(game)
 'rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3']
 ```
-## Task 3: Define a function qall(FEN) that returns a dictionaries which contains the move: evaluation (centipawn), and evaluation (expected score)
-
+## Task 3: qall(FEN)
+Define a function qall(FEN) that returns a dictionaries which contains the move: evaluation (centipawn), and evaluation (expected score)
 Where expected_score = round(float(move.get('winrate'))*0.01,4)
 
 Example:
@@ -35,8 +35,9 @@ qall(FEN)
 {'b5': [-1, 0.4992], 'Be7': [-5, 0.4962], 'Bb4': [-102, 0.4233]}
 ```
 
-## Task 4: Define a function qscore(FEN)
+## Task 4: qscore(FEN)
 
-## Task 5: Define a function qbest(FEN)
+## Task 5: qbest(FEN)
 
-## Task 6: Define a function compare(move) which compares the evaluation of the move played in the position to the top move in the position. If the difference in expected_score >= sensitivity (let sensitivity = 0.05 for now), return the best move. Else, return the current move.
+## Task 6: compare(move)
+Define a function compare(move) which compares the evaluation of the move played in the position to the top move in the position. If the difference in expected_score >= sensitivity (let sensitivity = 0.05 for now), return the best move. Else, return the current move.
