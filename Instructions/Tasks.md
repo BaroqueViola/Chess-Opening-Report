@@ -1,5 +1,5 @@
-## Task 1: Define a function lichess() where the user inputs the 8 character game code e.g. qzsgQdLe, return a dictionary containing the following:
-{'opening': 'name',
+## Task 1: lichess()
+Define a function lichess() where the user inputs the 8 character game code e.g. qzsgQdLe, return a dictionary containing the following: {'opening': 'name',
 'moves': [list of moves]}
 
 Example:
