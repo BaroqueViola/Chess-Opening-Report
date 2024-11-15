@@ -8,6 +8,11 @@ def score(centipawn):
 import math
 import chess
 
+"""
+v is the centipawn evaluation
+m is material count
+"""
+
 def winRateParams(fen):
     fen2 = fen.lower().split()[0]
     # Material count
@@ -40,4 +45,4 @@ def expectedScore(v,fen):
     score = (wdl_w + wdl_d * 0.5)/1000
     return round(score,4)
 
-print(expectedScore(100,'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'))
+print(expectedScore(0,'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'))
