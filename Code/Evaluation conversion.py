@@ -7,7 +7,6 @@ def score(centipawn):
 # Stockfish formula (WIP)
 import math
 import chess
-fen = ''
 
 def winRateParams(fen):
     fen2 = fen.lower().split()[0]
