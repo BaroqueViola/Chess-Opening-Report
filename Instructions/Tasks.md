@@ -59,6 +59,8 @@ get_positions(game)
 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3']
 ```
 ```python
+import chess
+
 def get_positions(moves):
     """
     Plays each move on a chess board and returns a list of FEN strings for each position.
@@ -85,6 +87,31 @@ qall(FEN)
   'Bb4': [-102, 0.4233],
   ...
 }
+```
+```python
+import requests
+
+def qall(fen):
+    """
+    Fetches suggested moves from ChessDB for a given FEN and formats them as a dictionary.
+    """
+    api_url = f'http://www.chessdb.cn/cdb.php?action=queryall&board={fen}&json=true'
+    response = requests.get(api_url)
+    
+    suggestions = {}
+    if response.status_code == 200:
+        data = response.json()
+        if 'moves' in data:
+            for move in data['moves']:
+                san = move.get('san')
+                score = int(move.get('score'))
+                expected_score = round(float(move.get('winrate')) * 0.01, 4)
+                suggestions[san] = [score, expected_score]
+        else:
+            print("No suggestions available.")
+    else:
+        print("API error")
+    return suggestions
 ```
 
 ## Task 4: qscore(FEN)
