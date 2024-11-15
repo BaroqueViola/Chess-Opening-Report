@@ -1,7 +1,5 @@
-## Task 1: lichess() (to fix)
-Define a function lichess() where the user inputs the 8 character game code e.g. qzsgQdLe, return a dictionary (or JSON if you prefer) containing the following: `{'opening': 'name', 'moves': [list_of_moves]}`
-
-Later we will modify the code so that it accepts game links also.
+## Task 1: lichess()
+Define a function lichess() where the user inputs the 8 character game code e.g. qzsgQdLe, or game link, return a dictionary (or JSON if you prefer) containing the following: `{'opening': 'name', 'moves': [list_of_moves]}`
 
 Example:
 ```python
