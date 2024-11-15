@@ -114,4 +114,4 @@ Return the best move
 Return the centipawn evaluation
 
 ## Task 6: compare(move)
-Define a function compare(move) which compares the evaluation of the move played in the position to the top move in the position. If the difference in expected_score >= sensitivity (let sensitivity = 0.05 for now), return the best move. Else, return the current move.
+Define a function compare(move) which compares the evaluation of the move played in the position to the top move in the position. If the difference in expected_score >= sensitivity (let sensitivity = 0.05 for now), return the best move and the before/after evaluations. Else, return the current move.
