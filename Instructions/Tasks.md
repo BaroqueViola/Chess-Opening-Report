@@ -88,6 +88,8 @@ qall(FEN)
   ...
 }
 ```
+
+### This is a variation on qall(FEN) that takes multiple positions.
 ```python
 import requests
 
