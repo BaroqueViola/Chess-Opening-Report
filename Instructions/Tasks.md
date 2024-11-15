@@ -90,6 +90,8 @@ qall(FEN)
 }
 ```
 ```python
+import requests
+
 def qall(fen):
     """
     Fetches suggested moves from ChessDB for a given FEN and formats them as a dictionary.
@@ -111,33 +113,6 @@ def qall(fen):
             return "No suggestions available."
     else:
         return "API error"
-    return suggestions
-```
-
-### This is a variation on qall(FEN) that takes multiple positions.
-```python
-import requests
-
-def qall(fen):
-    """
-    Fetches suggested moves from ChessDB for a given FEN and formats them as a dictionary.
-    """
-    api_url = f'http://www.chessdb.cn/cdb.php?action=queryall&board={fen}&json=true'
-    response = requests.get(api_url)
-    
-    suggestions = {}
-    if response.status_code == 200:
-        data = response.json()
-        if 'moves' in data:
-            for move in data['moves']:
-                san = move.get('san')
-                score = int(move.get('score'))
-                expected_score = round(float(move.get('winrate')) * 0.01, 4)
-                suggestions[san] = [score, expected_score]
-        else:
-            print("No suggestions available.")
-    else:
-        print("API error")
     return suggestions
 ```
 
