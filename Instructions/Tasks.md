@@ -67,6 +67,7 @@ def get_positions(moves):
     """
     board = chess.Board()
     fens = []
+    fens.append(board.fen())
     for move in moves:
         board.push_san(move)
         fens.append(board.fen())
