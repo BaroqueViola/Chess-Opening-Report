@@ -13,6 +13,36 @@ lichess()
   'moves': ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5', 'a6', 'Ba4', 'Nf6', 'O-O', ...]
 }
 ```
+```python
+import requests
+
+def lichess():
+    
+    while True:
+        game_code = input("Enter the 8 character game code: ")
+        if len(game_code) == 8:
+            break
+        elif 'lichess.org' in game_code:
+            index = game_code.find('lichess.org') + 12
+            game_code = game_code[index:index + 8]
+            break
+    
+    api_url = 'https://lichess.org/game/export/' + game_code + '?action&tags=false&clocks=false&evals=false&division=false'
+    response = requests.get(api_url, headers={"Accept": "application/json"})
+
+    # If API request is successful
+    if response.status_code == 200:
+        data = response.json()
+    else:
+        print('API error')
+        return 0
+
+    # Get opening name
+    opening = data['opening']['name']
+
+    move_list = data['moves'].split()
+    return {'opening': opening, 'moves': move_list}
+```
 ## Task 2: get_positions(game)
 Define a function get_positions(game) that returns a list containing the position code a.k.a. FEN of each position, including the starting position.
 
