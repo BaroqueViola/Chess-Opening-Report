@@ -26,7 +26,7 @@ def lichess():
                 game_code = game_code[index:index + 8]
                 break
     
-    api_url = 'https://lichess.org/game/export/' + game_code + '?action&tags=false&clocks=false&evals=false&division=false'
+    api_url = f'https://lichess.org/game/export/{game_code}?action&tags=false&clocks=false&evals=false&division=false'
     response = requests.get(api_url, headers={"Accept": "application/json"})
 
     # If API request is successful
