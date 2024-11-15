@@ -86,9 +86,7 @@ qall(FEN)
 import requests
 
 def qall(fen):
-    """
-    Fetches suggested moves from ChessDB for a given FEN and formats them as a dictionary.
-    """
+    # Fetches suggested moves from ChessDB for a given FEN and formats them as a dictionary.
     api_url = f'http://www.chessdb.cn/cdb.php?action=queryall&board={fen}&json=true'
     response = requests.get(api_url)
     
@@ -103,9 +101,9 @@ def qall(fen):
                 expected_score = round(float(move.get('winrate')) * 0.01, 4)
                 suggestions[san] = [score, expected_score]
         else:
-            return "No suggestions available."
+            return 'No suggestions available.'
     else:
-        return "API error"
+        return 'API error'
     return suggestions
 ```
 
