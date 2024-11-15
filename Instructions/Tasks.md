@@ -24,8 +24,9 @@ def lichess():
             break
         elif 'lichess.org' in game_code:
             index = game_code.find('lichess.org') + 12
-            game_code = game_code[index:index + 8]
-            break
+            if len(game_code) >= index + 8: 
+                game_code = game_code[index:index + 8]
+                break
     
     api_url = 'https://lichess.org/game/export/' + game_code + '?action&tags=false&clocks=false&evals=false&division=false'
     response = requests.get(api_url, headers={"Accept": "application/json"})
