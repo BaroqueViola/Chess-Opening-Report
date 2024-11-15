@@ -17,7 +17,7 @@ import requests
 def lichess():
     
     while True:
-        game_code = input("Enter the 8 character game code: ")
+        game_code = input('Enter the 8 character game code or the game URL: ')
         if len(game_code) == 8:
             break
         elif 'lichess.org' in game_code:
@@ -27,16 +27,14 @@ def lichess():
                 break
     
     api_url = f'https://lichess.org/game/export/{game_code}?action&tags=false&clocks=false&evals=false&division=false'
-    response = requests.get(api_url, headers={"Accept": "application/json"})
+    response = requests.get(api_url, headers={'Accept': 'application/json'})
 
     # If API request is successful
     if response.status_code == 200:
         data = response.json()
     else:
-        print('API error')
-        return 0
+        return 'API error'
 
-    # Get opening name
     opening = data['opening']['name']
 
     move_list = data['moves'].split()
