@@ -9,10 +9,13 @@ import math
 import chess
 
 """
-v is the centipawn evaluation
 m is material count
 """
 
+def centipawnTov(centipawn,fen):
+    a,b = winRateParams(fen)
+    return int(centipawn * a / 100)
+    
 def winRateParams(fen):
     fen2 = fen.lower().split()[0]
     # Material count
@@ -33,16 +36,18 @@ def winRateParams(fen):
     
     return a,b
 
-def winRateModel(v,fen):
+def winRateModel(centipawn,fen):
+    v = centipawnTov(centipawn,fen)
     a,b = winRateParams(fen)
     return int(0.5 + 1000 / (1 + math.exp((a - v) / b)))
 
-def expectedScore(v,fen):
+def expectedScore(centipawn,fen):
+    v = centipawnTov(centipawn,fen)
     wdl_w = winRateModel(v,fen)
     wdl_l = winRateModel(-v,fen)
     wdl_d = 1000 - wdl_w - wdl_l
     
     score = (wdl_w + wdl_d * 0.5)/1000
     return round(score,4)
-
-print(expectedScore(0,'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'))
+ 
+print(expectedScore(177,'rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2'))            
