@@ -12,6 +12,8 @@ import chess
 
 """
 m is material count
+a and b are conversion parameters
+v is static evaluation
 """
 
 def centipawnTov(centipawn,fen):
