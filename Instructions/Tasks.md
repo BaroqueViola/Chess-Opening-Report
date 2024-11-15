@@ -58,9 +58,6 @@ get_positions(game)
 import chess
 
 def get_positions(moves):
-    """
-    Plays each move on a chess board and returns a list of FEN strings for each position.
-    """
     board = chess.Board()
     fens = []
     fens.append(board.fen())
