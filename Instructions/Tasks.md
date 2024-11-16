@@ -108,6 +108,22 @@ def qall(fen):
 
 ## Task 4: qscore(FEN)
 Return the best move
+```python
+def qscore(fen):
+    # Fetches the evaluation from ChessDB for a given FEN.
+    api_url = f'http://www.chessdb.cn/cdb.php?action=queryscore&board={fen}&json=true'
+    response = requests.get(api_url)
+
+    if response.status_code == 200:
+        data = response.json()
+        if 'eval' in data:
+            centipawn = data['eval']
+        else:
+            return 'No suggestions available.'
+    else:
+        return 'API error'
+    return expectedScore(centipawn,fen)
+```
 
 ## Task 5: qbest(FEN)
 Return the centipawn evaluation
