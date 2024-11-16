@@ -127,6 +127,26 @@ def qscore(fen):
 
 ## Task 5: qbest(FEN)
 Return the centipawn evaluation
+```python
+def qbest(fen):
+    api_url = f'http://www.chessdb.cn/cdb.php?action=querybest&board={fen}&json=true'
+    response = requests.get(api_url)
+    
+    suggestions = {}
+    if response.status_code == 200:
+        data = response.json()
+        if 'move' in data:
+            move_uci = data['move']
+            board = chess.Board()
+            board.set_fen(fen)
+            move_obj = chess.Move.from_uci(move_uci)
+            move_san = board.san(move_obj)
+        else:
+            return 'No suggestions available.'
+    else:
+        return 'API error'
+    return move_san
+```
 
 ## Task 6: compare(move)
 Define a function compare(move) which compares the evaluation of the move played in the position to the top move in the position. If the difference in expected_score >= sensitivity (let sensitivity = 0.05 for now), return the best move and the before/after evaluations. Else, return the current move.
