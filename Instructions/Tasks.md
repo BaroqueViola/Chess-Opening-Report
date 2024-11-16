@@ -93,7 +93,6 @@ def qall(fen):
     suggestions = {}
     if response.status_code == 200:
         data = response.json()
-        print(data)
         if 'moves' in data:
             for move in data['moves']:
                 san = move.get('san')
