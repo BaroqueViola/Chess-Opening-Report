@@ -3,7 +3,6 @@ import chess
 import math
 
 def lichess():
-    
     while True:
         game_code = input('Enter the 8 character game code or the game URL: ')
         if len(game_code) == 8:
@@ -49,7 +48,7 @@ def qall(fen):
             for move in data['moves']:
                 san = move.get('san')
                 centipawn = int(move.get('score'))
-                expected_score = round(float(move.get('winrate')) * 0.01, 4)
+                expected_score = expectedScore(centipawn,fen)
                 suggestions[san] = [centipawn, expected_score]
         else:
             return 'No suggestions available.'
@@ -133,13 +132,36 @@ def expectedScore(centipawn,fen):
     score = (wdl_w + wdl_d * 0.5)/1000
     return round(score,4)
 
-def analysis(fens):
-    return 0
+def analysis(fens, moves):
+    i = 0
+    comments = []
+    while i <= n and i <= len(moves):
+        bestEval = qscore(fens[i])
+        movesData = qall(fens[i])
+        if moves[i] in movesData:
+            moveEval = movesData[moves[i]][1]
+            print(f'be: {bestEval}, me: {moveEval}')
+            if bestEval - moveEval >= sensitivity:
+                comments.append([i+1, moves[i], qbest(fens[i]), moveEval, bestEval])
+        i += 1
+    return comments
 
 def main():
     gameData = lichess()
+
+    side = input("Input the side that you want to analyze ('w' for white,'b' for black', 'wb' for both): ")
+
+    sensitivity = float(input('Enter the sensitivity: '))
+
+    n = 2 * int(input('Enter the number of moves to analyze: '))
+
     positions = get_positions(gameData['moves'])
     analysis(positions)
     return 0
 
-print(qbest('r1bqkb1r/1ppp1ppp/p1n5/4p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 b kq - 0 6'))
+sensitivity = 0.05
+n = 15
+mymoves = lichess()['moves']
+myfens = get_positions(mymoves)
+print(mymoves)
+print(analysis(myfens, mymoves))
