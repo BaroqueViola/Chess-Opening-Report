@@ -132,7 +132,6 @@ def qbest(fen):
     api_url = f'http://www.chessdb.cn/cdb.php?action=querybest&board={fen}&json=true'
     response = requests.get(api_url)
     
-    suggestions = {}
     if response.status_code == 200:
         data = response.json()
         if 'move' in data:
