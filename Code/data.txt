@@ -5,7 +5,7 @@ https://lichess.org/28BX1zzd
 https://lichess.org/AXV9lmtM
 https://lichess.org/XhFQ9qRp
 
-Input example:
+Input examples:
 qzsgQdLe
 b
 n
