@@ -2,107 +2,105 @@ import requests
 import chess
 import math
 
+# This function returns {'opening': opening, 'moves': moveList}
 def lichess():
     while True:
-        game_code = input('Enter the 8 character game code or the game URL: ')
-        if len(game_code) == 8:
+        gameCode = input('Enter the 8 character game code or the game URL: ')
+        if len(gameCode) == 8:
             break
-        elif 'lichess.org' in game_code:
-            index = game_code.find('lichess.org') + 12
-            if len(game_code) >= index + 8: 
-                game_code = game_code[index:index + 8]
+        elif 'lichess.org' in gameCode:
+            index = gameCode.find('lichess.org') + 12
+            if len(gameCode) >= index + 8: 
+                gameCode = gameCode[index:index + 8]
                 break
     
-    api_url = f'https://lichess.org/game/export/{game_code}?action&tags=false&clocks=false&evals=false&division=false'
-    response = requests.get(api_url, headers={'Accept': 'application/json'})
+    apiUrl = f'https://lichess.org/game/export/{gameCode}?action&tags=false&clocks=false&evals=false&division=false'
+    response = requests.get(apiUrl, headers={'Accept': 'application/json'})
 
-    # If API request is successful
     if response.status_code == 200:
         data = response.json()
     else:
         return 'API error'
 
     opening = data['opening']['name']
+    moveList = data['moves'].split()
 
-    move_list = data['moves'].split()
-    return {'opening': opening, 'moves': move_list}
+    return {'opening': opening, 'moves': moveList}
 
-def get_positions(moves):
+# This functiion takes a list of moves and returns a list of positions
+def getPositions(moveList):
     board = chess.Board()
-    fens = []
-    fens.append(board.fen())
-    for move in moves:
+    fenList = []
+    fenList.append(board.fen())
+    for move in moveList:
         board.push_san(move)
-        fens.append(board.fen())
-    return fens
+        fenList.append(board.fen())
+    
+    return fenList
 
+# This function takes a position and returns the moves data
 def qall(fen):
-    # Fetches suggested moves from ChessDB for a given FEN and formats them as a dictionary.
-    api_url = f'http://www.chessdb.cn/cdb.php?action=queryall&board={fen}&json=true'
-    response = requests.get(api_url)
+    apiUrl = f'http://www.chessdb.cn/cdb.php?action=queryall&board={fen}&json=true'
+    response = requests.get(apiUrl)
+    
+    if response.status_code == 200:
+        data = response.json()
+    else:
+        return 'API error'
     
     suggestions = {}
-    if response.status_code == 200:
-        data = response.json()
-        if 'moves' in data:
-            for move in data['moves']:
-                san = move.get('san')
-                centipawn = int(move.get('score'))
-                expected_score = expectedScore(centipawn,fen)
-                suggestions[san] = [centipawn, expected_score]
-        else:
-            return 'No suggestions available.'
+    if 'moves' in data:
+        for move in data['moves']:
+            san = move.get('san')
+            centipawn = int(move.get('score'))
+            eScore = expectedScore(centipawn,fen)
+            suggestions[san] = {'centipawn': centipawn, 'expected score': eScore}
     else:
-        return 'API error'
+        return 'No suggestions available.'
+    
     return suggestions
 
+# This function takes a position and returns the evaluation
 def qscore(fen):
     # Fetches the evaluation from ChessDB for a given FEN.
-    api_url = f'http://www.chessdb.cn/cdb.php?action=queryscore&board={fen}&json=true'
-    response = requests.get(api_url)
+    apiUrl = f'http://www.chessdb.cn/cdb.php?action=queryscore&board={fen}&json=true'
+    response = requests.get(apiUrl)
 
     if response.status_code == 200:
         data = response.json()
-        if 'eval' in data:
-            centipawn = data['eval']
-        else:
-            return 'No suggestions available.'
     else:
         return 'API error'
-    return expectedScore(centipawn,fen)
+    
+    if 'eval' in data:
+        return expectedScore(data['eval'],fen)
+    else:
+        return 'No suggestions available.'
 
+# This function takes a position and returns the best move
 def qbest(fen):
-    api_url = f'http://www.chessdb.cn/cdb.php?action=querybest&board={fen}&json=true'
-    response = requests.get(api_url)
+    apiUrl = f'http://www.chessdb.cn/cdb.php?action=querybest&board={fen}&json=true'
+    response = requests.get(apiUrl)
     
     if response.status_code == 200:
         data = response.json()
-        if 'move' in data:
-            move_uci = data['move']
-            board = chess.Board()
-            board.set_fen(fen)
-            move_obj = chess.Move.from_uci(move_uci)
-            move_san = board.san(move_obj)
-        else:
-            return 'No suggestions available.'
     else:
         return 'API error'
-    return move_san
-
-"""
-m is material count
-a and b are conversion parameters
-v is static evaluation
-"""
-
-def centipawnTov(centipawn,fen):
-    a,b = winRateParams(fen)
-    return int(centipawn * a / 100)
+    
+    if 'move' in data:
+        moveUci = data['move']
+        board = chess.Board()
+        board.set_fen(fen)
+        moveObj = chess.Move.from_uci(moveUci)
+        moveSan = board.san(moveObj)
+    else:
+        return 'No suggestions available.'
+    
+    return moveSan
     
 def winRateParams(fen):
-    fen2 = fen.lower().split()[0]
+    pos = fen.lower().split()[0]
     # Material count
-    m = 9 * fen2.count('q') + 5 * fen2.count('r') + 3 * fen2.count('b') + 3 * fen2.count('n') + fen2.count('p')
+    m = 9 * pos.count('q') + 5 * pos.count('r') + 3 * pos.count('b') + 3 * pos.count('n') + pos.count('p')
     
     if m > 78:
         m = 78
@@ -111,11 +109,11 @@ def winRateParams(fen):
     
     m /= 58
     
-    a_s = [-37.45051876, 121.19101539, -132.78783573, 420.70576692]
-    b_s = [90.26261072, -137.26549898, 71.10130540, 51.35259597]
+    aList = [-37.45051876, 121.19101539, -132.78783573, 420.70576692]
+    bList = [90.26261072, -137.26549898, 71.10130540, 51.35259597]
     
-    a = (((a_s[0] * m + a_s[1]) * m + a_s[2]) * m) + a_s[3]
-    b = (((b_s[0] * m + b_s[1]) * m + b_s[2]) * m) + b_s[3]
+    a = (((aList[0] * m + aList[1]) * m + aList[2]) * m) + aList[3]
+    b = (((bList[0] * m + bList[1]) * m + bList[2]) * m) + bList[3]
     
     return a,b
 
@@ -123,16 +121,22 @@ def winRateModel(v,fen):
     a,b = winRateParams(fen)
     return int(0.5 + 1000 / (1 + math.exp((a - v) / b)))
 
+def centipawnTov(centipawn,fen):
+    a,b = winRateParams(fen)
+    return int(centipawn * a / 100)
+
+# This function takes the centipawn and fen, and returns the evaluation
 def expectedScore(centipawn,fen):
     v = centipawnTov(centipawn,fen)
-    wdl_w = winRateModel(v,fen)
-    wdl_l = winRateModel(-v,fen)
-    wdl_d = 1000 - wdl_w - wdl_l
+    wdlW = winRateModel(v,fen)
+    wdlL = winRateModel(-v,fen)
+    wdlD = 1000 - wdlW - wdlL
     
-    score = (wdl_w + wdl_d * 0.5)/1000
+    score = (wdlW + wdlD * 0.5) / 1000
     return round(score,4)
 
-def analysis(fens, moves):
+# This function takes in a list of moves and returns the analysis
+def analysisold(fens, moves):
     i = 0
     comments = []
     while i <= n and i <= len(moves):
@@ -146,22 +150,45 @@ def analysis(fens, moves):
         i += 1
     return comments
 
-def main():
-    gameData = lichess()
-
-    side = input("Input the side that you want to analyze ('w' for white,'b' for black', 'wb' for both): ")
-
-    sensitivity = float(input('Enter the sensitivity: '))
-
-    n = 2 * int(input('Enter the number of moves to analyze: '))
-
-    positions = get_positions(gameData['moves'])
-    analysis(positions)
+def analysis(moveList):
     return 0
 
-sensitivity = 0.05
+def getSide():
+    while True:
+        side = input("Input the side that you want to analyze: ")
+        # 'w' for white,'b' for black', 'wb' for both
+        if side.lower() in ['w','b','wb']:
+            return side
+
+def getSens():
+    while True:
+        sensitivity = float(input('Enter the sensitivity: '))
+        # 'p' for perfect, 's' for strict, 'n' for normal, 'l' for lenient
+        if sensitivity in ['p','s','n','l']:
+            sensitivity = {'p': 0.01, 's': 0.02, 'n': 0.05, 'l': 0.10}[sensitivity]
+            return sensitivity
+
+def getn():
+    while True:
+        n = input('Enter the number of moves to analyze: ')
+        if n.isnumeric():
+            n = 2 * int(input('Enter the number of moves to analyze: '))
+            return n
+
+def main():
+    gameData = lichess()
+    side = getSide()
+    sensitivity = getSens()
+    n = getn()
+
+    moveList = gameData['moves']
+    analysis(moveList)
+    return 0
+
+gameData = lichess()
+sensitivity = 0.02
 n = 15
-mymoves = lichess()['moves']
-myfens = get_positions(mymoves)
+mymoves = gameData['moves']
+myfens = getPositions(mymoves)
 print(mymoves)
 print(analysis(myfens, mymoves))
