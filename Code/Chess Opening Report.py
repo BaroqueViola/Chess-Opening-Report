@@ -111,19 +111,22 @@ def analysis(moveList, side):
 
     i = 0
     # i % 2 == 0 when it is white to move, otherwise it is black to move
-    while i <= min(n, len(moveList)):
+    while i < min(n, len(moveList)):
         move = moveList[i]
         movesData = qall(fen)
-        i += 1
 
         if side == 'w' and i % 2 == 1:
             board.push_san(move)
             fen = board.fen()
+            i += 1
             continue
         elif side == 'b' and i % 2 == 0:
             board.push_san(move)
             fen = board.fen()
+            i += 1
             continue
+
+        i += 1
 
         if movesData != 'No suggestions available.':
             suggestedMoves = list(movesData.keys())
@@ -131,6 +134,7 @@ def analysis(moveList, side):
             bestEval = movesData[bestMove]['centipawn']
             besteScore = qscore(fen) 
         else:
+            comments.append(movesData, i)
             break
 
         if move in movesData:
@@ -140,16 +144,16 @@ def analysis(moveList, side):
             continue
 
         if besteScore - moveeScore > sensitivity:
-            comments.append({'ply': i+1, 'move': move, 'best move': bestMove, 'move eval': moveEval\
-                , 'best eval': bestEval, 'move score': moveeScore, 'best score': besteScore})
+            comments.append({'ply': i, 'move': move, 'best move': bestMove, 'move eval': moveEval\
+                , 'best eval': bestEval})
 
         board.push_san(move)
         fen = board.fen()
 
-    return comments, i
+    return comments
 
 # Formats the analysis result
-def report(comments, i):
+def report(comments):
     return 0
 
 def getSide():
@@ -181,14 +185,12 @@ def main():
     n = getn()
 
     moveList = gameData['moves']
-    analysis(moveList)
-    print(report())
+    print(report(analysis(moveList)))
     return 0
 
-
 gameData = lichess()
-side = 'wb'
-sensitivity = 0
-n = 15
+side = 'w'
+sensitivity = 0.02
+n = 30
 moveList = gameData['moves']
 print(analysis(moveList, side))
