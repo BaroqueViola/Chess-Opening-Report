@@ -51,7 +51,6 @@ def qall(fen):
 
 # This function takes a position and returns the evaluation
 def qscore(fen):
-    # Fetches the evaluation from ChessDB for a given FEN.
     apiUrl = f'http://www.chessdb.cn/cdb.php?action=queryscore&board={fen}&json=true'
     response = requests.get(apiUrl)
 
