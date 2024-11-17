@@ -141,6 +141,8 @@ def analysis(moveList, side):
             moveEval = movesData[move]['centipawn']
             moveeScore = movesData[move]['expected score']
         else:
+            board.push_san(move)
+            fen = board.fen()
             continue
 
         if besteScore - moveeScore > sensitivity:
@@ -155,9 +157,12 @@ def analysis(moveList, side):
 # Formats the analysis result
 def report(comments):
     openingReport = '\nChess opening report\n'
+    openingReport += f'\nOpening: {gameData['opening']}\n'
     if len(comments['analysis']) == 0:
         openingReport += '\nNo mistakes found'
         return openingReport
+    
+    openingReport += '\nImprovements:\n'
     
     for mistake in comments['analysis']:
         moveEval = mistake['move eval']/100
@@ -193,7 +198,8 @@ def report(comments):
         openingReport += f'{mistake['move']} -> {mistake['best move']} ({moveEval} -> {bestEval})'
     
     if len(comments['info']) != 0:
-        openingReport += f'\n\nThe analysis was halted early on ply {comments["info"][1]} \
+        moveNum = comments["info"][1] // 2
+        openingReport += f'\n\nThe analysis was halted early on move {moveNum} \
 due to an unexplored position.'
 
     return openingReport
