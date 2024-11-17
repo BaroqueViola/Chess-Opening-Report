@@ -93,7 +93,7 @@ def centipawnTov(centipawn,fen):
     a,b = winRateParams(fen)
     return int(centipawn * a / 100)
 
-# This function takes the centipawn and fen, and returns the evaluation
+# This function takes the centipawn and position, and returns the evaluation
 def expectedScore(centipawn,fen):
     v = centipawnTov(centipawn,fen)
     wdlW = winRateModel(v,fen)
@@ -107,7 +107,7 @@ def expectedScore(centipawn,fen):
 def analysis(moveList, side):
     board = chess.Board()
     fen = board.fen()
-    comments = []
+    comments = {'analysis': [], 'info': []}
 
     i = 0
     # i % 2 == 0 when it is white to move, otherwise it is black to move
@@ -134,7 +134,7 @@ def analysis(moveList, side):
             bestEval = movesData[bestMove]['centipawn']
             besteScore = qscore(fen) 
         else:
-            comments.append(movesData, i)
+            comments['info'] = [movesData, i]
             break
 
         if move in movesData:
@@ -144,7 +144,7 @@ def analysis(moveList, side):
             continue
 
         if besteScore - moveeScore > sensitivity:
-            comments.append({'ply': i, 'move': move, 'best move': bestMove, 'move eval': moveEval\
+            comments['analysis'].append({'ply': i, 'move': move, 'best move': bestMove, 'move eval': moveEval\
                 , 'best eval': bestEval})
 
         board.push_san(move)
@@ -154,7 +154,49 @@ def analysis(moveList, side):
 
 # Formats the analysis result
 def report(comments):
-    return 0
+    openingReport = '\nChess opening report\n'
+    if len(comments['analysis']) == 0:
+        openingReport += '\nNo mistakes found'
+        return openingReport
+    
+    for mistake in comments['analysis']:
+        moveEval = mistake['move eval']/100
+        bestEval = mistake['best eval']/100
+
+        if mistake['ply'] % 2 == 1:
+            moveNum = mistake['ply'] // 2 + 1
+            openingReport += f'\n{moveNum}. '
+            if moveEval > 0:
+                moveEval = f'+{moveEval:.2f}'
+            else:
+                moveEval = f'{moveEval:.2f}'
+            if bestEval > 0:
+                bestEval = f'+{bestEval:.2f}'
+            else:
+                bestEval = f'{bestEval:.2f}'
+
+        else:
+            moveNum = mistake['ply'] // 2
+            openingReport += f'\n{moveNum}... '
+            if moveEval > 0:
+                moveEval = f'-{moveEval:.2f}'
+            elif moveEval < 0:
+                moveEval = f'+{-moveEval:.2f}'
+            else:
+                moveEval = f'{moveEval:.2f}'
+            if bestEval > 0:
+                bestEval = f'-{bestEval:.2f}'
+            elif bestEval < 0:
+                bestEval = f'+{-bestEval:.2f}'
+            else:
+                bestEval = f'{bestEval:.2f}'
+        openingReport += f'{mistake['move']} -> {mistake['best move']} ({moveEval} -> {bestEval})'
+    
+    if len(comments['info']) != 0:
+        openingReport += f'\n\nThe analysis was halted early on ply {comments["info"][1]} \
+due to an unexplored position.'
+
+    return openingReport
 
 def getSide():
     while True:
@@ -165,7 +207,7 @@ def getSide():
 
 def getSens():
     while True:
-        sensitivity = float(input('Enter the sensitivity: '))
+        sensitivity = input('Enter the sensitivity: ')
         # 'p' for perfect, 's' for strict, 'n' for normal, 'l' for lenient
         if sensitivity in ['p','s','n','l']:
             sensitivity = {'p': 0.00, 's': 0.02, 'n': 0.05, 'l': 0.10}[sensitivity]
@@ -175,22 +217,19 @@ def getn():
     while True:
         n = input('Enter the number of moves to analyze: ')
         if n.isnumeric():
-            n = 2 * int(input('Enter the number of moves to analyze: '))
+            n = int(n)
+            n *= 2
             return n
 
 def main():
+    global gameData, n, side, sensitivity
     gameData = lichess()
     side = getSide()
     sensitivity = getSens()
     n = getn()
 
     moveList = gameData['moves']
-    print(report(analysis(moveList)))
+    print(report(analysis(moveList, side)))
     return 0
 
-gameData = lichess()
-side = 'w'
-sensitivity = 0.02
-n = 30
-moveList = gameData['moves']
-print(analysis(moveList, side))
+main()
