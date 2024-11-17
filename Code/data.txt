@@ -7,3 +7,6 @@ https://lichess.org/XhFQ9qRp
 
 Sample input:
 qzsgQdLe
+b
+n
+20
