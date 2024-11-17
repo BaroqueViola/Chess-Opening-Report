@@ -92,7 +92,7 @@ def centipawnTov(centipawn,fen):
     a,b = winRateParams(fen)
     return int(centipawn * a / 100)
 
-# This function takes the centipawn and position, and returns the evaluation
+# This function takes the centipawn and position, and returns the expected score
 def expectedScore(centipawn,fen):
     v = centipawnTov(centipawn,fen)
     wdlW = winRateModel(v,fen)
