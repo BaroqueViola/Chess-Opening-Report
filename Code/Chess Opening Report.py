@@ -27,17 +27,6 @@ def lichess():
 
     return {'opening': opening, 'moves': moveList}
 
-# This functiion takes a list of moves and returns a list of positions
-def getPositions(moveList):
-    board = chess.Board()
-    fenList = []
-    fenList.append(board.fen())
-    for move in moveList:
-        board.push_san(move)
-        fenList.append(board.fen())
-    
-    return fenList
-
 # This function takes a position and returns the moves data
 def qall(fen):
     apiUrl = f'http://www.chessdb.cn/cdb.php?action=queryall&board={fen}&json=true'
@@ -75,27 +64,6 @@ def qscore(fen):
         return expectedScore(data['eval'],fen)
     else:
         return 'No suggestions available.'
-
-# This function takes a position and returns the best move
-def qbest(fen):
-    apiUrl = f'http://www.chessdb.cn/cdb.php?action=querybest&board={fen}&json=true'
-    response = requests.get(apiUrl)
-    
-    if response.status_code == 200:
-        data = response.json()
-    else:
-        return 'API error'
-    
-    if 'move' in data:
-        moveUci = data['move']
-        board = chess.Board()
-        board.set_fen(fen)
-        moveObj = chess.Move.from_uci(moveUci)
-        moveSan = board.san(moveObj)
-    else:
-        return 'No suggestions available.'
-    
-    return moveSan
     
 def winRateParams(fen):
     pos = fen.lower().split()[0]
@@ -136,21 +104,52 @@ def expectedScore(centipawn,fen):
     return round(score,4)
 
 # This function takes in a list of moves and returns the analysis
-def analysisold(fens, moves):
-    i = 0
+def analysis(moveList, side):
+    board = chess.Board()
+    fen = board.fen()
     comments = []
-    while i <= n and i <= len(moves):
-        bestEval = qscore(fens[i])
-        movesData = qall(fens[i])
-        if moves[i] in movesData:
-            moveEval = movesData[moves[i]][1]
-            print(f'be: {bestEval}, me: {moveEval}')
-            if bestEval - moveEval >= sensitivity:
-                comments.append([i+1, moves[i], qbest(fens[i]), moveEval, bestEval])
-        i += 1
-    return comments
 
-def analysis(moveList):
+    i = 0
+    # i % 2 == 0 when it is white to move, otherwise it is black to move
+    while i <= min(n, len(moveList)):
+        move = moveList[i]
+        movesData = qall(fen)
+        i += 1
+
+        if side == 'w' and i % 2 == 1:
+            board.push_san(move)
+            fen = board.fen()
+            continue
+        elif side == 'b' and i % 2 == 0:
+            board.push_san(move)
+            fen = board.fen()
+            continue
+
+        if movesData != 'No suggestions available.':
+            suggestedMoves = list(movesData.keys())
+            bestMove = suggestedMoves[0]
+            bestEval = movesData[bestMove]['centipawn']
+            besteScore = qscore(fen) 
+        else:
+            break
+
+        if move in movesData:
+            moveEval = movesData[move]['centipawn']
+            moveeScore = movesData[move]['expected score']
+        else:
+            continue
+
+        if besteScore - moveeScore > sensitivity:
+            comments.append({'ply': i+1, 'move': move, 'best move': bestMove, 'move eval': moveEval\
+                , 'best eval': bestEval, 'move score': moveeScore, 'best score': besteScore})
+
+        board.push_san(move)
+        fen = board.fen()
+
+    return comments, i
+
+# Formats the analysis result
+def report(comments, i):
     return 0
 
 def getSide():
@@ -165,7 +164,7 @@ def getSens():
         sensitivity = float(input('Enter the sensitivity: '))
         # 'p' for perfect, 's' for strict, 'n' for normal, 'l' for lenient
         if sensitivity in ['p','s','n','l']:
-            sensitivity = {'p': 0.01, 's': 0.02, 'n': 0.05, 'l': 0.10}[sensitivity]
+            sensitivity = {'p': 0.00, 's': 0.02, 'n': 0.05, 'l': 0.10}[sensitivity]
             return sensitivity
 
 def getn():
@@ -183,12 +182,13 @@ def main():
 
     moveList = gameData['moves']
     analysis(moveList)
+    print(report())
     return 0
 
+
 gameData = lichess()
-sensitivity = 0.02
+side = 'wb'
+sensitivity = 0
 n = 15
-mymoves = gameData['moves']
-myfens = getPositions(mymoves)
-print(mymoves)
-print(analysis(myfens, mymoves))
+moveList = gameData['moves']
+print(analysis(moveList, side))
