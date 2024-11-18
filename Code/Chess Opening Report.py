@@ -171,13 +171,15 @@ def analysis(moveList, side):
         if evalDiff > sensitivity:
             # Notates the move played with '??' (blunder), '?' (mistake), or '?!' (inaccuracy) based on the difference in evaluation
             if evalDiff > 0.20:
-                move += '??'
+                moveAnnotated = move + '??'
             elif evalDiff > 0.10:
-                move += '?'
+                moveAnnotated = move + '?'
             elif evalDiff > 0.05:
-                move += '?!'
+                moveAnnotated = move + '?!'
+            else:
+                moveAnnotated = move
 
-            comments['analysis'].append({'ply': i, 'move': move, 'best move': bestMove, 'move eval': moveEval\
+            comments['analysis'].append({'ply': i, 'move': moveAnnotated, 'best move': bestMove, 'move eval': moveEval\
                 , 'best eval': bestEval})
 
         board.push_san(move)
